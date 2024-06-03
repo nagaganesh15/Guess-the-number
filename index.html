@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <title>Guess the number</title>
+        <style>
+            #bor{
+                border:2px solid black;
+                width: 500;
+                height: 450;
+                background-color: yellow;
+                border-radius: 40px;
+                background-repeat: no-repeat;
+                background-size: cover;
+                box-shadow: 2px 2px 5px 5px rgb(116, 116, 6);
+            }
+            body{
+                margin-top: 50;
+                background-image: url('guess.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            P{
+                font-size: 24;
+                
+            }
+            #num{
+                border-radius: 5px;
+                font-size: 23;
+                /* background-color: magenta; */
+            }
+            input[type="button"] {
+                font-size: 20px;
+                margin: 10px;
+                cursor: pointer;
+                border-radius: 8px;
+                background-color: aqua;
+            }
+            input[type="button"]:hover{
+                box-shadow: 3px 3px 3px rgb(0, 96, 96);
+            }
+
+            select{
+                font-size: 20;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <center>
+            <div id="bor">
+                <div style="background-color: pink; width: 500; height: 55; border: 2px solid; border-radius: 50%; box-shadow: 2px 5px 10px  rgb(32, 1, 7);" >
+                    <br>
+                    <p style="display: inline; " id="score">Score: 0</p>
+                    <p style="display: inline; margin-left: 100;">Highest Score: <spam id="high">0</spam></p>
+                </div>
+                
+            <p>Choose Your Guessing Level
+            <select id="sel" onchange="change()">
+                <option value="none">--Select--</option>
+                <option value="50">1 - 50</option>
+                <option value="100">1 - 100</option>
+                <option value="200">1 - 200</option>
+                <option value="300">1 - 300</option>
+                <option value="400">1 - 400</option>
+                <option value="500">1 - 500</option>    
+            </select></p>
+            <h1 id="tex">Select the Level</h1>
+            <input type="number" id="num" onclick="cl()">
+            <br>
+            <br>
+            <input type="button" value="Check" onclick="check()">
+            <input type="button" value="Submit" onclick="submit()">
+            <p id="w" style="color: red;"></p>
+            <p id="h1"></p>
+            <p id="h2"></p>
+            <audio src="wrong.mp3" id="wrong"></audio>
+            <audio src="correct.mp3" id="correct"></audio>
+            <!-- <input type="text" id="res1"> -->
+        </div>
+        </center>
+        
+    </body>
+    <script>
+        let b,a1,b1;
+        let score=0;
+        let hs=localStorage.getItem('high')||0;
+        document.getElementById('high').innerHTML=hs;
+        function change()
+        {
+            // document.getElementById('h1').textContent="";
+            // document.getElementById('w').textContent="";
+            // document.getElementById('h2').textContent="";
+            let a=document.getElementById('sel').value;
+            document.getElementById('tex').textContent="Guess The Number From 1 to "+a;
+            b=Math.floor(Math.random()*a);
+            b1=String(b)
+            if(b<10)
+                a1=Number(b1[0])
+            else if(b<100)
+                a1=Number(b1[0])+Number(b1[1])
+            else    
+                a1=Number(b1[0])+Number(b1[1])+Number(b1[2])
+            document.getElementById('res1').value=b;
+        }
+        function cl()
+        {
+            document.getElementById('bor').style.backgroundImage="";
+            document.getElementById('h1').textContent="";
+            document.getElementById('w').textContent="";
+            document.getElementById('h2').textContent="";
+        }
+
+        function check(){
+            let s=document.getElementById('sel').value;
+            if(s=="none")
+            {
+                document.getElementById('h1').textContent="Please select the Level";
+            }
+            else{
+                let a=document.getElementById('num').value;
+                a=Number(a)
+                if(a==b)
+                {
+                    document.getElementById('correct').play();
+
+                    document.getElementById('h1').textContent="wow! It is Correct";
+                    document.getElementById('h2').textContent="You can Submit";
+                }
+                else{
+                    document.getElementById('wrong').play();
+                    document.getElementById('w').textContent="Your Guess is Wrong "
+                    document.getElementById('h1').textContent="Hint1: The Sum of Digits is "+a1;
+                    document.getElementById('h2').textContent="Hint2: The Number of digits is "+b1.length;
+                }
+            }
+        }
+        function submit()
+        {
+            let s=document.getElementById('sel').value;
+            if(s=="none")
+            {
+                document.getElementById('h1').textContent="Please select the Level";
+            }
+            else{
+                let a=document.getElementById('num').value;
+                a=Number(a)
+                if(a==b)
+                {
+                    document.getElementById('bor').style.backgroundImage="url('congrats.gif')"
+                    document.getElementById('h1').textContent="Congratulations";
+                    document.getElementById('h2').textContent="Guess another Number";
+                    score+=1;
+                    document.getElementById('score').innerHTML="Score: "+score;
+                    if(score>hs)
+                    {
+                        hs=score;
+                        localStorage.setItem('high',hs);
+                        document.getElementById('high').innerText=hs;
+                    }
+                    change();
+                    document.getElementById('num').value="";
+                }
+                else{
+                    document.getElementById('h1').textContent="It is Wrong";
+                    document.getElementById('h2').textContent="Check the Hints";
+
+                }
+            }
+            
+            // document.getElementById('h1').innerHTML="Success";
+
+            
+        }
+    </script>
+</html>
+
